@@ -1,0 +1,32 @@
+REGALO PARA MAMÁ
+
+ARCHIVOS:
+- index.html: la página web.
+- fotos/foto1.jpg, foto2.jpg, foto3.jpg: reemplazá estos nombres por fotos reales de ustedes (mantené los nombres).
+- musica/cancion.mp3: poné una canción en MP3 con este nombre.
+
+CÓMO PROBAR:
+1. Descomprimí la carpeta.
+2. Abrí index.html con Chrome o Edge.
+3. Para la música, tocá el botón. Los navegadores no suelen dejar que arranque sola sin tocar nada.
+
+CÓMO CAMBIAR LA CARTA:
+Abrí index.html con el Bloc de notas o Visual Studio Code y buscá la lista "const pages" dentro del script. Cada línea entre comillas es una página de la carta.
+
+CÓMO PUBLICAR GRATIS CON GITHUB PAGES:
+1. Entrá a https://github.com y creá una cuenta o iniciá sesión.
+2. Tocá el + arriba a la derecha y elegí New repository.
+3. Poné un nombre, por ejemplo regalo-para-mama, y marcá Public.
+4. Creá el repositorio.
+5. Tocá Add file > Upload files.
+6. Subí index.html y las carpetas fotos y musica (con tus archivos adentro). Si la web te resulta más fácil, podés arrastrar los archivos desde la carpeta descomprimida.
+7. Tocá Commit changes.
+8. Entrá a Settings > Pages.
+9. En Build and deployment, elegí Deploy from a branch.
+10. Seleccioná la rama main y la carpeta /(root), y tocá Save.
+11. Esperá un ratito. GitHub te va a mostrar el link de tu web en esa misma sección.
+
+IMPORTANTE:
+- No subas fotos privadas que no quieras que vea cualquiera: un repositorio público permite que otras personas accedan a los archivos.
+- El archivo de música tiene que ser un MP3 que tengas derecho a usar. La música puede pesar bastante, así que conviene que sea un archivo liviano.
+- Si no ponés las fotos o la música, la web igual abre; solo van a faltar esos elementos.

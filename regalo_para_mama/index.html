@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#ff8db7">
+<title>Para vos, ma</title>
+<style>
+  :root {
+    --pink:#ff83b5; --hot:#f2468f; --yellow:#ffe68a; --mint:#c4f3dc; --lilac:#dccdff;
+    --cream:#fffaf2; --ink:#57364b; --soft:#8d637b;
+    --serif:Georgia,"Times New Roman",serif;
+    --sans:"Trebuchet MS",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;color:var(--ink);font-family:var(--sans);overflow-x:hidden;
+    background:linear-gradient(145deg,#fff3f8 0%,#fff9e9 48%,#effff7 100%) fixed}
+  button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+  button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+  svg{display:block}
+
+  /* Navegación */
+  .nav{position:sticky;top:0;z-index:30;display:flex;justify-content:center;gap:6px;padding:12px 10px;
+    background:rgba(255,250,242,.88);backdrop-filter:blur(8px);border-bottom:2px solid #ffe0ec;overflow-x:auto}
+  .nav button{padding:9px 16px;border-radius:99px;font-weight:700;font-size:.95rem;white-space:nowrap;color:var(--soft);transition:background .2s,color .2s}
+  .nav button:hover{background:#fff0f6}
+  .nav button[aria-current="true"]{background:var(--hot);color:#fff}
+
+  /* Escenas */
+  main{min-height:calc(100vh - 62px);padding:34px 18px 150px}
+  .scene{display:none;max-width:760px;margin:0 auto;text-align:center;animation:fade .45s ease}
+  .scene.on{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  h1{font-size:clamp(3rem,12vw,6.2rem);line-height:.98;margin:.4em 0 .3em;letter-spacing:-.05em;color:var(--hot);text-shadow:3px 4px 0 #ffe0ec}
+  h2{font-size:clamp(1.9rem,6vw,3rem);margin:.2em 0 .35em;letter-spacing:-.03em}
+  .lead{font-size:clamp(1.05rem,3vw,1.28rem);line-height:1.7;max-width:600px;margin:0 auto 28px}
+  .row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:24px}
+  .btn{border-radius:999px;padding:14px 24px;font-weight:800;box-shadow:0 5px 0 rgba(112,53,89,.15);transition:transform .15s,box-shadow .15s}
+  .btn:hover{transform:translateY(-2px)}
+  .btn:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(112,53,89,.15)}
+  .btn[disabled]{opacity:.45;pointer-events:none}
+  .primary{background:var(--hot);color:#fff}
+  .light{background:#fff;border:2px solid #ffd0e2}
+
+  /* Inicio */
+  .hero-heart{width:84px;margin:30px auto 0;animation:beat 1.6s ease-in-out infinite}
+  @keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+
+  /* Fotos */
+  .viewer{position:relative;max-width:480px;margin:0 auto}
+  .frame{background:#fff;padding:14px;border-radius:20px;box-shadow:0 14px 34px #b76c8b26;overflow:hidden}
+  .track{display:flex;transition:transform .45s cubic-bezier(.3,.7,.2,1);touch-action:pan-y}
+  .slide{min-width:100%}
+  .slide img{display:block;width:100%;aspect-ratio:4/4.5;object-fit:cover;border-radius:12px;background:#ffe3ee}
+  .ph{display:none;aspect-ratio:4/4.5;place-items:center;border-radius:12px;background:linear-gradient(135deg,#ffd4e6,#fff0b8);color:#a34d79;font-weight:700;padding:20px;line-height:1.6}
+  .arrow{position:absolute;top:50%;width:52px;height:52px;border-radius:50%;background:#fff;box-shadow:0 5px 14px #8e3d6a33;display:grid;place-items:center;transform:translateY(-50%);transition:transform .15s}
+  .arrow:hover{transform:translateY(-50%) scale(1.08)}
+  .arrow.l{left:-22px}.arrow.r{right:-22px}
+  .dots{display:flex;justify-content:center;gap:10px;margin-top:22px;align-items:center}
+  .dot{width:13px;height:13px;border-radius:50%;background:#f4c3d7;transition:all .25s}
+  .dot.on{background:var(--hot);width:34px;border-radius:99px}
+  .count{margin-top:10px;color:var(--soft);font-size:.95rem}
+
+  /* Carta */
+  .envelope{display:block;margin:20px auto 0;width:min(340px,86%);aspect-ratio:1.5;position:relative;border-radius:14px;background:#ffd3e4;box-shadow:0 14px 0 #f6bcd3;transition:transform .2s}
+  .envelope:hover{transform:translateY(-4px) rotate(-1deg)}
+  .envelope:before{content:"";position:absolute;inset:0;border-radius:14px;background:linear-gradient(to bottom right,transparent 49.5%,#f9b9d0 50%) 0 0/50% 100% no-repeat,linear-gradient(to bottom left,transparent 49.5%,#f9b9d0 50%) 100% 0/50% 100% no-repeat}
+  .envelope .flap{position:absolute;left:0;right:0;top:0;height:58%;background:#ff9fc4;clip-path:polygon(0 0,100% 0,50% 100%);border-radius:14px 14px 0 0}
+  .envelope .seal{position:absolute;left:50%;top:50%;width:54px;height:54px;transform:translate(-50%,-50%);border-radius:50%;background:var(--hot);display:grid;place-items:center;box-shadow:0 3px 0 #b02d68}
+  .tap{margin-top:30px;color:var(--soft)}
+  .paper{display:none;max-width:620px;margin:10px auto 0;padding:clamp(24px,5vw,44px);background:#fffdf8;border:3px dashed #ffc0d9;border-radius:24px;box-shadow:0 14px 0 #f9c8da;text-align:left;animation:fade .5s ease}
+  .paper.on{display:block}
+  .page{min-height:210px;font-family:var(--serif);font-size:clamp(1.08rem,3.2vw,1.28rem);line-height:1.85}
+  .page p{margin:0}
+  .page .sign{margin-top:22px;text-align:right;color:var(--hot);font-weight:700;font-size:1.35em}
+  .paper-nav{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:22px}
+  .bar{flex:1;height:8px;border-radius:99px;background:#ffe3ee;overflow:hidden}
+  .bar i{display:block;height:100%;width:0;background:var(--hot);transition:width .35s}
+  .small{padding:11px 20px;box-shadow:0 4px 0 rgba(112,53,89,.15)}
+
+  /* Infinito */
+  .card{max-width:620px;margin:0 auto;background:#fff;padding:34px 18px;border-radius:28px;border:3px solid #f9d5e4;box-shadow:0 14px 0 #f6d7e3}
+  .big{font-size:clamp(3.4rem,15vw,7rem);line-height:1.1;color:var(--hot);min-height:1.15em;font-weight:700;letter-spacing:-.03em}
+  .big.inf{font-size:clamp(5rem,22vw,9rem);animation:beat 1.8s ease-in-out infinite}
+  .verdict{font-weight:800;font-size:clamp(1.15rem,4vw,1.6rem);min-height:2.4em;margin:6px 0 0}
+  .reasons{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:20px}
+  .reason{background:#fff0b9;border-radius:999px;padding:11px 18px;font-weight:800;transition:transform .15s,box-shadow .15s}
+  .reason:nth-child(2){background:var(--lilac)}.reason:nth-child(3){background:var(--mint)}.reason:nth-child(4){background:#ffd3e4}
+  .reason:hover{transform:translateY(-2px)}
+  .reason[aria-pressed="true"]{box-shadow:0 0 0 3px var(--ink)}
+  .reason-out{min-height:3.4em;margin:18px auto 0;max-width:460px;line-height:1.7;font-family:var(--serif);font-size:1.15rem}
+  .hidden{display:none}
+
+  /* Sorpresa */
+  .gift{position:relative;width:170px;height:170px;margin:26px auto 8px;display:block}
+  .gift .lid,.gift .box{position:absolute;left:0;right:0}
+  .gift .box{bottom:0;height:98px;background:var(--hot);border-radius:0 0 12px 12px}
+  .gift .lid{top:26px;height:50px;background:#ff6aa8;border-radius:10px;transition:transform .6s cubic-bezier(.3,1.4,.4,1)}
+  .gift .box:before,.gift .lid:before{content:"";position:absolute;left:50%;width:26px;margin-left:-13px;top:0;bottom:0;background:var(--yellow)}
+  .gift .lid:after{content:"";position:absolute;left:50%;top:-30px;width:56px;height:34px;margin-left:-28px;border:8px solid var(--yellow);border-radius:50% 50% 0 0}
+  .gift.open .lid{transform:translate(34px,-70px) rotate(24deg)}
+  .gift:not(.open):hover .lid{transform:translateY(-8px)}
+  .final{display:none;max-width:540px;margin:20px auto 0;font-family:var(--serif);font-size:clamp(1.15rem,3.6vw,1.4rem);line-height:1.85}
+  .final.on{display:block;animation:fade .7s ease}
+  .after{display:none}.after.on{display:flex}
+  footer{margin-top:40px;color:var(--soft);font-size:.95rem;line-height:1.7}
+
+  /* Música */
+  .music{position:fixed;right:18px;bottom:18px;z-index:40;display:flex;align-items:center;gap:14px;
+    min-height:68px;padding:10px 28px 10px 10px;border-radius:99px;background:var(--hot);color:#fff;
+    font-weight:800;font-size:1.15rem;border:3px solid #fff;box-shadow:0 8px 26px #8e3d6a55;transition:transform .15s}
+  .music:hover{transform:scale(1.04)}
+  .music .ic{width:46px;height:46px;border-radius:50%;background:#fff;color:var(--hot);display:grid;place-items:center}
+  .eq{display:none;gap:3px;align-items:flex-end;height:20px}
+  .eq i{width:4px;background:#fff;border-radius:2px;animation:eq .9s ease-in-out infinite}
+  .eq i:nth-child(2){animation-delay:-.3s}.eq i:nth-child(3){animation-delay:-.6s}
+  @keyframes eq{0%,100%{height:5px}50%{height:20px}}
+  .music.playing .eq{display:flex}
+  .toast{position:fixed;left:50%;bottom:104px;transform:translateX(-50%);z-index:50;background:var(--ink);color:#fff;padding:12px 18px;border-radius:14px;max-width:90vw;font-size:.95rem;opacity:0;pointer-events:none;transition:opacity .3s;text-align:center}
+  .toast.on{opacity:1}
+
+  /* Corazones */
+  .heart{position:fixed;bottom:-50px;z-index:60;pointer-events:none;animation:up 3.4s ease-in forwards}
+  @keyframes up{to{transform:translateY(-118vh) rotate(30deg);opacity:0}}
+
+  @media(max-width:640px){
+    .arrow.l{left:-8px}.arrow.r{right:-8px}
+    .music{left:14px;right:14px;justify-content:center;bottom:14px}
+    .toast{bottom:100px}
+    .nav{justify-content:flex-start}
+  }
+  @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Secciones">
+  <button data-go="0">Inicio</button>
+  <button data-go="1">Fotos</button>
+  <button data-go="2">Carta</button>
+  <button data-go="3">Cuánto te quiero</button>
+  <button data-go="4">Sorpresa</button>
+</nav>
+
+<main>
+
+  <!-- 0 · Inicio -->
+  <section class="scene" id="s0">
+    <svg class="hero-heart" viewBox="0 0 24 22" aria-hidden="true"><path fill="#f2468f" d="M12 21.2C5 15.6 1 12 1 7.6 1 4.4 3.5 2 6.6 2c2 0 4 1.1 5.4 3 1.4-1.9 3.4-3 5.4-3C20.500 2 23 4.400 23 7.600c0 4.400-4 8-11 13.600z"/></svg>
+    <h1>Feliz día,<br>vieja</h1>
+    <p class="lead">Capaz no te lo digo todos los días, ma, pero sos una de las personas más importantes de mi vida. Esta paginita es para vos.</p>
+    <div class="row">
+      <button class="btn primary" data-go="1">Empezar</button>
+      <button class="btn light" id="loveBtn">Llenar todo de amor</button>
+    </div>
+  </section>
+
+  <!-- 1 · Fotos -->
+  <section class="scene" id="s1">
+    <h2>Unas fotitos con vos</h2>
+    <p class="lead">Pasá las fotos con las flechas, con los puntitos o deslizando con el dedo.</p>
+    <div class="viewer">
+      <div class="frame"><div class="track" id="track">
+        <div class="slide"><img src="fotos/foto1.jpg" alt="Un recuerdo con mamá"><div class="ph">Acá va una foto nuestra<br><small>fotos/foto1.jpg</small></div></div>
+        <div class="slide"><img src="fotos/foto2.jpg" alt="Otro recuerdo con mamá"><div class="ph">Acá va otra foto<br><small>fotos/foto2.jpg</small></div></div>
+        <div class="slide"><img src="fotos/foto3.jpg" alt="Un momento especial con mamá"><div class="ph">Acá va otra foto<br><small>fotos/foto3.jpg</small></div></div>
+      </div></div>
+      <button class="arrow l" id="prevPhoto" aria-label="Foto anterior"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f2468f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <button class="arrow r" id="nextPhoto" aria-label="Foto siguiente"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f2468f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
+    </div>
+    <div class="dots" id="dots"></div>
+    <div class="count" id="count"></div>
+    <div class="row"><button class="btn primary" data-go="2">Ir a la carta</button></div>
+  </section>
+
+  <!-- 2 · Carta -->
+  <section class="scene" id="s2">
+    <h2>Una cartita para vos vieja</h2>
+    <div id="envWrap">
+      <button class="envelope" id="envelope" aria-label="Abrir el sobre"><span class="flap"></span><span class="seal"><svg width="26" height="24" viewBox="0 0 24 22" aria-hidden="true"><path fill="#fff" d="M12 21.2C5 15.6 1 12 1 7.6 1 4.4 3.5 2 6.6 2c2 0 4 1.1 5.4 3 1.4-1.9 3.4-3 5.4-3C20.5 2 23 4.4 23 7.6c0 4.4-4 8-11 13.6z"/></svg></span></button>
+      <p class="tap">Tocá el sobre para abrirlo</p>
+    </div>
+    <div class="paper" id="paper">
+      <div class="page" id="page" aria-live="polite"></div>
+      <div class="paper-nav">
+        <button class="btn light small" id="prevPage">Anterior</button>
+        <div class="bar"><i id="bar"></i></div>
+        <button class="btn primary small" id="nextPage">Seguir leyendo</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · Cuánto te quiero -->
+  <section class="scene" id="s3">
+    <h2>¿Cuánto te quiero?</h2>
+    <div class="card">
+      <div class="big" id="num">?</div>
+      <p class="verdict" id="verdict">Apretá el botón y lo medimos.</p>
+      <button class="btn primary" id="measure">Medir</button>
+      <div id="reasonsBox" class="hidden">
+        <p style="margin:26px 0 0;font-weight:800">Tocá cada razón:</p>
+        <div class="reasons" id="reasons">
+          <button class="reason" aria-pressed="false" data-t="Los que arreglan cualquier día.">Tus abrazos</button>
+          <button class="reason" aria-pressed="false" data-t="Hasta cuando estoy insoportable.">Bancarme</button>
+          <button class="reason" aria-pressed="false" data-t="Aunque a veces tarde en darme cuenta de que tenías razón.">Tus consejos</button>
+          <button class="reason" aria-pressed="false" data-t="Con eso ya alcanza.">Ser vos</button>
+        </div>
+        <p class="reason-out" id="reasonOut"></p>
+      </div>
+    </div>
+    <div class="row"><button class="btn primary hidden" id="toSurprise" data-go="4">Hay algo más</button></div>
+  </section>
+
+  <!-- 4 · Sorpresa -->
+  <section class="scene" id="s4">
+    <h2>Pará, ma… hay algo más</h2>
+    <p class="lead" style="margin-bottom:0">Te guardé una última sorpresita. Tocá el regalo.</p>
+    <button class="gift" id="gift" aria-label="Abrir el regalo"><span class="box"></span><span class="lid"></span></button>
+    <p class="final" id="final">Si pudiera elegir mil veces, te elegiría como mi mamá mil y una. Gracias por ser mi casa, mi apoyo y una parte enorme de mi felicidad. Te amo con todo mi corazón, vieja. Hoy y siempre.</p>
+    <div class="row after" id="after">
+      <button class="btn light" data-go="2">Volver a leer la carta</button>
+      <button class="btn primary" data-go="0">Volver al inicio</button>
+    </div>
+    <footer>Hecho con amor para la mejor mamá del mundo.<br><small>PD: te debo un abrazo enorme.</small></footer>
+  </section>
+
+</main>
+
+<audio id="bgMusic" loop><source src="musica/cancion.mp3" type="audio/mpeg"></audio>
+<button class="music" id="musicBtn" aria-label="Reproducir música">
+  <span class="ic" id="musicIcon"></span>
+  <span id="musicText">Reproducir música</span>
+  <span class="eq" aria-hidden="true"><i></i><i></i><i></i></span>
+</button>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+  const $ = s => document.querySelector(s);
+  const $$ = s => [...document.querySelectorAll(s)];
+  const HEART = '<svg viewBox="0 0 24 22"><path d="M12 21.2C5 15.6 1 12 1 7.6 1 4.4 3.5 2 6.6 2c2 0 4 1.1 5.4 3 1.4-1.9 3.4-3 5.4-3C20.500 2 23 4.400 23 7.600c0 4.400-4 8-11 13.600z"/></svg>';
+
+  /* Navegación entre escenas */
+  const scenes = $$('.scene'), navBtns = $$('.nav button');
+  function go(n) {
+    scenes.forEach((s, i) => s.classList.toggle('on', i === n));
+    navBtns.forEach((b, i) => b.setAttribute('aria-current', i === n));
+    navBtns[n].scrollIntoView({inline:'center', block:'nearest'});
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+  document.addEventListener('click', e => {
+    const b = e.target.closest('[data-go]');
+    if (b) go(+b.dataset.go);
+  });
+
+  /* Corazones */
+  const colors = ['#f2468f','#ff83b5','#ffb3d1','#f7c948','#b79cff'];
+  function burstHearts(n = 26) {
+    for (let i = 0; i < n; i++) {
+      const h = document.createElement('span');
+      h.className = 'heart';
+      h.innerHTML = HEART;
+      h.style.left = Math.random() * 100 + 'vw';
+      h.style.width = (18 + Math.random() * 26) + 'px';
+      h.style.fill = colors[Math.floor(Math.random() * colors.length)];
+      h.style.animationDuration = (2.4 + Math.random() * 2) + 's';
+      h.style.animationDelay = (Math.random() * .5) + 's';
+      document.body.appendChild(h);
+      setTimeout(() => h.remove(), 5500);
+    }
+  }
+  $('#loveBtn').onclick = () => burstHearts();
+
+  /* Fotos */
+  $$('.slide img').forEach(img => img.onerror = () => { img.style.display = 'none'; img.nextElementSibling.style.display = 'grid'; });
+  const slides = $$('.slide'), dots = $('#dots');
+  let cur = 0, startX = null;
+  slides.forEach((_, i) => {
+    const d = document.createElement('button');
+    d.className = 'dot'; d.setAttribute('aria-label', 'Foto ' + (i + 1));
+    d.onclick = () => showPhoto(i);
+    dots.appendChild(d);
+  });
+  function showPhoto(i) {
+    cur = (i + slides.length) % slides.length;
+    $('#track').style.transform = `translateX(-${cur * 100}%)`;
+    $$('.dot').forEach((d, k) => d.classList.toggle('on', k === cur));
+    $('#count').textContent = `${cur + 1} de ${slides.length}`;
+  }
+  $('#prevPhoto').onclick = () => showPhoto(cur - 1);
+  $('#nextPhoto').onclick = () => showPhoto(cur + 1);
+  const tr = $('#track');
+  tr.addEventListener('touchstart', e => startX = e.touches[0].clientX, {passive:true});
+  tr.addEventListener('touchend', e => {
+    if (startX === null) return;
+    const dx = e.changedTouches[0].clientX - startX;
+    if (Math.abs(dx) > 40) showPhoto(cur + (dx < 0 ? 1 : -1));
+    startX = null;
+  });
+  document.addEventListener('keydown', e => {
+    if (!$('#s1').classList.contains('on')) return;
+    if (e.key === 'ArrowLeft') showPhoto(cur - 1);
+    if (e.key === 'ArrowRight') showPhoto(cur + 1);
+  });
+
+  /* Carta (editá los textos acá) */
+  const pages = [
+    'Ma, feliz Día de la Madre.',
+    'Capaz a veces no te demuestro todo lo que te quiero, o me cuesta encontrar las palabras para decirte lo importante que sos para mí. Pero quiero que sepas que te agradezco un montón por estar, por cuidarme, por bancarme incluso cuando estoy insoportable y por hacer tantas cosas por mí, aunque a veces ni me dé cuenta.',
+    'Gracias por cada abrazo, cada consejo, cada risa y por estar ahí cuando te necesito. No sos solamente mi mamá: sos una persona que quiero tener siempre cerca y con la que compartí un montón de momentos que valen muchísimo para mí.',
+    'No existe un regalo que alcance para devolverte todo lo que hacés por mí, pero hice esta paginita (Mentira, la hizo la ia)con todo mi amor para sacarte una sonrisa y recordarte lo mucho que te quiero.',
+    'Te amo una banda, vieja. Aunque a veces no lo diga, aunque discutamos por boludeces o tengamos días medio difíciles, eso no cambia nunca. Ojalá hoy te sientas tan querida como vos me hacés sentir a mí.'
+  ];
+  const signature = 'Te amo infinito, ma.';
+  let pg = 0;
+  function showPage(i) {
+    pg = i;
+    const last = pg === pages.length - 1;
+    $('#page').innerHTML = '<p>' + pages[pg] + '</p>' + (last ? '<p class="sign">' + signature + '</p>' : '');
+    $('#bar').style.width = ((pg + 1) / pages.length * 100) + '%';
+    $('#prevPage').style.visibility = pg === 0 ? 'hidden' : 'visible';
+    $('#nextPage').textContent = last ? 'Seguir' : 'Seguir leyendo';
+    if (last) burstHearts(10);
+  }
+  $('#envelope').onclick = () => {
+    $('#envWrap').style.display = 'none';
+    $('#paper').classList.add('on');
+    showPage(0);
+  };
+  $('#prevPage').onclick = () => showPage(pg - 1);
+  $('#nextPage').onclick = () => pg === pages.length - 1 ? go(3) : showPage(pg + 1);
+
+  /* Cuánto te quiero */
+  const steps = ['1','100','10.000','1.000.000','1.000.000.000','1.000.000.000.000'];
+  $('#measure').onclick = function () {
+    const btn = this, num = $('#num'), verdict = $('#verdict');
+    btn.disabled = true; num.classList.remove('inf'); verdict.textContent = 'Midiendo…';
+    let i = 0;
+    const t = setInterval(() => {
+      if (i < steps.length) { num.textContent = steps[i++]; return; }
+      clearInterval(t);
+      num.textContent = '∞'; num.classList.add('inf');
+      verdict.textContent = 'Muchísimo. Tipo… infinito. No hay número que alcance.';
+      btn.textContent = 'Medir de nuevo'; btn.disabled = false;
+      $('#reasonsBox').classList.remove('hidden');
+      $('#toSurprise').classList.remove('hidden');
+      burstHearts(14);
+    }, 420);
+  };
+  $$('.reason').forEach(r => r.onclick = () => {
+    $$('.reason').forEach(x => x.setAttribute('aria-pressed', x === r));
+    $('#reasonOut').textContent = r.dataset.t;
+  });
+
+  /* Sorpresa */
+  $('#gift').onclick = function () {
+    if (this.classList.contains('open')) return;
+    this.classList.add('open');
+    $('#final').classList.add('on');
+    $('#after').classList.add('on');
+    burstHearts(40);
+  };
+
+  /* Música */
+  const audio = $('#bgMusic'), mBtn = $('#musicBtn');
+  const ICON_PLAY = '<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+  const ICON_PAUSE = '<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>';
+  $('#musicIcon').innerHTML = ICON_PLAY;
+  function toast(msg) {
+    const t = $('#toast'); t.textContent = msg; t.classList.add('on');
+    clearTimeout(toast.id); toast.id = setTimeout(() => t.classList.remove('on'), 3500);
+  }
+  mBtn.onclick = async () => {
+    if (audio.paused) {
+      try {
+        await audio.play();
+        mBtn.classList.add('playing');
+        $('#musicIcon').innerHTML = ICON_PAUSE;
+        $('#musicText').textContent = 'Pausar música';
+      } catch (e) {
+        toast('No encontré la canción. Poné un MP3 en musica/cancion.mp3');
+      }
+    } else {
+      audio.pause();
+      mBtn.classList.remove('playing');
+      $('#musicIcon').innerHTML = ICON_PLAY;
+      $('#musicText').textContent = 'Reproducir música';
+    }
+  };
+
+  showPhoto(0);
+  go(0);
+</script>
+</body>
+</html>
